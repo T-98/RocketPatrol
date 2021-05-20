@@ -14,7 +14,7 @@ class Play extends Phaser.Scene {
     }
     create() {
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.starfield = this.add.tileSprite(0, 0, 1280, 720, 'starfield').setOrigin(0, 0);
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // white borders
@@ -41,7 +41,7 @@ class Play extends Phaser.Scene {
         this.anims.create({
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0 }),
-            frameRate: 30
+            frameRate: 10
         });
 
         // initialize score
@@ -67,9 +67,9 @@ class Play extends Phaser.Scene {
 
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(60000, () => {
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width / 2, game.config.height / 2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (R) to Restart', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
     }
@@ -77,7 +77,7 @@ class Play extends Phaser.Scene {
     update() {
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
-            this.scene.restart();
+            this.scene.start("menuScene");
         }
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver) {
